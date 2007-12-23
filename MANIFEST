@@ -5,4 +5,4 @@ Makefile.PL
 README
 lib/Text/Darts.pm
 t/Text-Darts.t
-t/benchmark.t
+t/benchmark.pl
