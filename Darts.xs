@@ -26,6 +26,15 @@ int da_free(int dpi){
     delete INT2PTR(Darts::DoubleArray *, dpi);
 }
 
+int da_open(char *filename){
+    Darts::DoubleArray *dp = new Darts::DoubleArray;
+    if (dp->open(filename) == -1){
+	delete dp;
+	return 0;
+    }
+    return PTR2IV(dp);
+}
+
 int da_search(int dpi, char *str){
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair [MAX_NMATCH];
@@ -105,6 +114,13 @@ CODE:
 OUTPUT:
     RETVAL
 
+int
+xs_open(filename)
+   char *filename
+CODE:
+   RETVAL = da_open(filename);
+OUTPUT:
+   RETVAL
 
 SV *
 xs_gsub(dpi, src, callback)

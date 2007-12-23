@@ -2,7 +2,7 @@ package Text::Darts;
 use strict;
 use warnings;
 use Carp;
-our $VERSION = sprintf "%d.%02d", q$Revision: 0.1 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 0.2 $ =~ /(\d+)/g;
 our $DEBUG = 0;
 
 require XSLoader;
@@ -11,6 +11,14 @@ XSLoader::load('Text::Darts', $VERSION);
 sub new{
     my $pkg = shift;
     my $dpi = xs_make([sort @_]);
+    bless \$dpi, $pkg;
+}
+
+sub open{
+    my $pkg = shift;
+    my $filename = shift;
+    my $dpi = xs_open($filename) 
+	or carp __PACKAGE__, " cannot open $filename";
     bless \$dpi, $pkg;
 }
 
@@ -41,8 +49,11 @@ if ($0 eq __FILE__){
     sub say { print @_, "\n" };
     my @a = ("ALGOL", "ANSI", "ARCO",  "ARPA", "ARPANET", "ASCII");
     my $da = __PACKAGE__->new(@a);
-    say $da->gsub("I don't like ALGOL at all!", sub{"<<$_[0]>>"});
+    say $da->gsub("I don't like ALGOL at all!", sub{"<$_[0]>"});
     say $da->gsub("I don't like nomatch at all!");
+    $da = __PACKAGE__->open(shift);
+    say $da->gsub("The quick brown fox jumps over the black lazy dog",
+		  sub{"<$_[0]>"});
 }
 
 1;
@@ -59,6 +70,11 @@ Text::Darts - Perl interface to DARTS by Taku Kudoh
   my $td     = Text::Darts->new(qw/ALGOL ANSI ARCO ARPA ARPANET ASCII/);
   my $newstr = $td->gsub("ARPANET is a net by ARPA", sub{ "<<$_[0]>>" });
   $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
+  # or
+  my $td     = Text::Darts->open("words.darts");
+  my $newstr = $td->gsub($str, sub{ 
+     qq(<a href="http://dictionary.com/browse/$_[0]">$_[0]</a>)
+  }); # link'em all!
 
 =head1 DESCRIPTION
 

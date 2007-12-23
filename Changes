@@ -1,7 +1,11 @@
 # Revision history for Perl extension Text::Darts.
 #
-# $Id: Changes,v 0.1 2007/12/23 15:27:34 dankogai Exp dankogai $
+# $Id: Changes,v 0.2 2007/12/23 16:32:49 dankogai Exp dankogai $
 #
+$Revision: 0.2 $ $Date: 2007/12/23 16:32:49 $
+! Darts.xs lib/Text/Darts.pm
+  added $td->open();
+
 0.01  Sun Dec 23 19:26:55 2007
 	- original version; created by h2xs 1.23 with options
 		-n Text::Darts

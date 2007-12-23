@@ -1,7 +1,8 @@
 Changes
 Darts.xs
-Makefile.PL
 MANIFEST
+Makefile.PL
 README
-t/Text-Darts.t
 lib/Text/Darts.pm
+t/Text-Darts.t
+t/benchmark.t
