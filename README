@@ -1,0 +1,55 @@
+NAME
+    Text::Darts - Perl interface to DARTS by Taku Kudoh
+
+SYNOPSIS
+      use Text::Darts; 
+      my $td     = Text::Darts->new(qw/ALGOL ANSI ARCO ARPA ARPANET ASCII/);
+      my $newstr = $td->gsub("ARPANET is a net by ARPA", sub{ "<<$_[0]>>" });
+      $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
+
+DESCRIPTION
+    Darts, or Double-ARray Trie System is a C++ Template Library by Taku
+    Kudoh. This module makes use of Darts to implement global replace like
+    below;
+
+      $str = s{ (foo|bar|baz) }{ "<<$1>>" }msgex;
+
+    The problem with regexp is that it is slow with alterations. Suppose you
+    want to anchor all words that appear in /usr/share/dict/words with
+    regexp. It would be impractical with regexp but Darts make it practical.
+
+REQUIREMENT
+    Darts 0.31 or above. Available at
+
+    <http://chasen.org/~taku/software/darts/index.html> (Japanese)
+
+    <http://chasen.org/~taku/software/darts/src/darts-0.31.tar.gz>
+
+    To install, just
+
+      fetch http://chasen.org/~taku/software/darts/src/darts-0.31.tar.gz
+      tar zxvf darts-0.31.tar.gz
+      cd darts-0.31
+      configure
+      make
+      make check
+      sudo make install
+
+  EXPORT
+    None.
+
+SEE ALSO
+    <http://chasen.org/~taku/software/darts/index.html> (Japanese)
+
+    Regexp::Assemble
+
+AUTHOR
+    Dan Kogai, <dankogai@dan.co.jp>
+
+COPYRIGHT AND LICENSE
+    Copyright (C) 2007 by Dan Kogai
+
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself, either Perl version 5.10.0 or, at
+    your option, any later version of Perl 5 you may have available.
+

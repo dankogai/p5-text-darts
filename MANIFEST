@@ -1,0 +1,7 @@
+Changes
+Darts.xs
+Makefile.PL
+MANIFEST
+README
+t/Text-Darts.t
+lib/Text/Darts.pm

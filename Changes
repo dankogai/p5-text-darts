@@ -1,0 +1,8 @@
+# Revision history for Perl extension Text::Darts.
+#
+# $Id: Changes,v 0.1 2007/12/23 15:27:34 dankogai Exp dankogai $
+#
+0.01  Sun Dec 23 19:26:55 2007
+	- original version; created by h2xs 1.23 with options
+		-n Text::Darts
+
