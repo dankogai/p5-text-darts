@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.PL,v 0.1 2007/12/23 15:27:34 dankogai Exp $
+# $Id: Makefile.PL,v 0.2 2007/12/23 18:08:55 dankogai Exp dankogai $
 #
 use 5.008001;
 use strict;
@@ -20,7 +20,7 @@ WriteMakefile(
           (
             ABSTRACT_FROM =>
               'lib/Text/Darts.pm',    # retrieve abstract from module
-            AUTHOR => 'Dan <dankogai@intra>'
+            AUTHOR => 'Dan <dankogai@dan.co.jp>'
           )
         : ()
     ),
