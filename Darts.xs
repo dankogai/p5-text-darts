@@ -13,7 +13,7 @@ extern "C" {
 
 int da_make(AV *av){
     Darts::DoubleArray *dp = new Darts::DoubleArray;
-    std::vector <Darts::DoubleArray::key_type *> keys;
+    std::vector <const Darts::DoubleArray::key_type *> keys;
     int i, l;
     for (i = 0, l = av_len(av)+1; i < l; i++){
 	keys.push_back(SvPV_nolen(AvARRAY(av)[i]));

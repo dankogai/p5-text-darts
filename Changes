@@ -1,8 +1,15 @@
 # Revision history for Perl extension Text::Darts.
 #
-# $Id: Changes,v 0.3 2007/12/23 18:08:55 dankogai Exp dankogai $
+# $Id: Changes,v 0.4 2008/09/27 15:24:53 dankogai Exp dankogai $
 #
-$Revision: 0.3 $ $Date: 2007/12/23 18:08:55 $
+$Revision: 0.4 $ $Date: 2008/09/27 15:24:53 $
+! Darts.xs
+  fixed for Darts-0.32 (by NAOYA)
+  Message-Id:	<20080927232111.3A0A.520E252C@hatena.ne.jp>
+! lib/Text/Darts.pm
+  Pod fixes
+
+0.03 2007/12/23
 ! Makefile.pm
   s@intra/@dan.co.jp/
 

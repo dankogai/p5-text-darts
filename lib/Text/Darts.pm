@@ -2,7 +2,7 @@ package Text::Darts;
 use strict;
 use warnings;
 use Carp;
-our $VERSION = sprintf "%d.%02d", q$Revision: 0.3 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 0.4 $ =~ /(\d+)/g;
 our $DEBUG = 0;
 
 require XSLoader;
@@ -90,17 +90,17 @@ practical.
 
 =head1 REQUIREMENT
 
-Darts 0.31 or above.  Available at 
+Darts 0.32 or above.  Available at 
 
 L<http://chasen.org/~taku/software/darts/index.html> (Japanese)
 
-L<http://chasen.org/~taku/software/darts/src/darts-0.31.tar.gz>
+L<http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz>
 
 To install, just
 
-  fetch http://chasen.org/~taku/software/darts/src/darts-0.31.tar.gz
-  tar zxvf darts-0.31.tar.gz
-  cd darts-0.31
+  fetch http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz
+  tar zxvf darts-0.32.tar.gz
+  cd darts-0.32
   configure
   make
   make check
