@@ -64,8 +64,8 @@ static SV *do_callback(SV *callback, SV *s){
     return retval;
 }
 
-static SV *do_hvlookup(SV *hashref, SV *key){
-    SV **val = hv_fetch((HV *)SvRV(hashref), SvPVX(key), SvCUR(key), 0);
+static SV *do_hvlookup(SV *hashref, char *str, size_t len){
+    SV **val = hv_fetch((HV *)SvRV(hashref), str, len, 0 );
     return val && *val ? *val : &PL_sv_undef;
 }
 
@@ -89,7 +89,7 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
 	    if (seekto) {
 		SV *ret = SvTYPE(SvRV(rep)) == SVt_PVCV
 		    ? do_callback(rep, newSVpvn(head, seekto))
-		    : do_hvlookup(rep, newSVpvn(head, seekto));
+		    : do_hvlookup(rep, head, seekto);
 		sv_catsv(result, ret);
 		head += seekto;
 	    }
