@@ -1,8 +1,12 @@
 # Revision history for Perl extension Text::Darts.
 #
-# $Id: Changes,v 0.4 2008/09/27 15:24:53 dankogai Exp dankogai $
+# $Id: Changes,v 0.5 2009/03/30 11:44:30 dankogai Exp dankogai $
 #
-$Revision: 0.4 $ $Date: 2008/09/27 15:24:53 $
+$Revision: 0.5 $ $Date: 2009/03/30 11:44:30 $
+! Darts.xs lib/Text/Darts.pm
+  gsub() now accepts hash reference, too
+
+0.04 2008/09/27 15:24:53
 ! Darts.xs
   fixed for Darts-0.32 (by NAOYA)
   Message-Id:	<20080927232111.3A0A.520E252C@hatena.ne.jp>

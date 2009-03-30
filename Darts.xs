@@ -11,7 +11,7 @@ extern "C" {
 #include <darts.h>
 #define MAX_NMATCH 1024
 
-int da_make(AV *av){
+static int da_make(AV *av){
     Darts::DoubleArray *dp = new Darts::DoubleArray;
     std::vector <const Darts::DoubleArray::key_type *> keys;
     int i, l;
@@ -22,11 +22,11 @@ int da_make(AV *av){
     return PTR2IV(dp);
 }
 
-int da_free(int dpi){
+static int da_free(int dpi){
     delete INT2PTR(Darts::DoubleArray *, dpi);
 }
 
-int da_open(char *filename){
+static int da_open(char *filename){
     Darts::DoubleArray *dp = new Darts::DoubleArray;
     if (dp->open(filename) == -1){
 	delete dp;
@@ -35,7 +35,7 @@ int da_open(char *filename){
     return PTR2IV(dp);
 }
 
-int da_search(int dpi, char *str){
+static int da_search(int dpi, char *str){
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair [MAX_NMATCH];
     size_t num = dp->commonPrefixSearch(str, result_pair, sizeof(result_pair));
@@ -43,8 +43,7 @@ int da_search(int dpi, char *str){
 }
 
 
-static SV *
-do_callback(SV *callback, SV *s){
+static SV *do_callback(SV *callback, SV *s){
     dSP;
     int argc;
     SV *retval;
@@ -65,7 +64,12 @@ do_callback(SV *callback, SV *s){
     return retval;
 }
 
-SV *da_gsub(int dpi, SV *src, SV *callback){
+static SV *do_hvlookup(SV *hashref, SV *key){
+    SV **val = hv_fetch((HV *)SvRV(hashref), SvPVX(key), SvCUR(key), 0);
+    return val && *val ? *val : &PL_sv_undef;
+}
+
+static SV *da_gsub(int dpi, SV *src, SV *rep){
     SV *result = newSV(0);
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair[MAX_NMATCH];
@@ -83,7 +87,9 @@ SV *da_gsub(int dpi, SV *src, SV *callback){
 		    seekto = result_pair[i].length;
 	    }
 	    if (seekto) {
-		SV *ret = do_callback(callback, newSVpvn(head, seekto));
+		SV *ret = SvTYPE(SvRV(rep)) == SVt_PVCV
+		    ? do_callback(rep, newSVpvn(head, seekto))
+		    : do_hvlookup(rep, newSVpvn(head, seekto));
 		sv_catsv(result, ret);
 		head += seekto;
 	    }
@@ -123,12 +129,12 @@ OUTPUT:
    RETVAL
 
 SV *
-xs_gsub(dpi, src, callback)
+xs_gsub(dpi, src, rep)
    int dpi;
    SV *src;
-   SV *callback; 
+   SV *rep; 
 CODE:
-   RETVAL = da_gsub(dpi, src, callback);
+   RETVAL = da_gsub(dpi, src, rep);
 OUTPUT:
    RETVAL
 

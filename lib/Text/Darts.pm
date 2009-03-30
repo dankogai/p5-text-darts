@@ -2,7 +2,7 @@ package Text::Darts;
 use strict;
 use warnings;
 use Carp;
-our $VERSION = sprintf "%d.%02d", q$Revision: 0.4 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 0.5 $ =~ /(\d+)/g;
 our $DEBUG = 0;
 
 require XSLoader;
@@ -48,12 +48,16 @@ sub gsub{
 if ($0 eq __FILE__){
     sub say { print @_, "\n" };
     my @a = ("ALGOL", "ANSI", "ARCO",  "ARPA", "ARPANET", "ASCII");
+    my %a = map { $_ => lc $_ } @a;
     my $da = __PACKAGE__->new(@a);
     say $da->gsub("I don't like ALGOL at all!", sub{"<$_[0]>"});
     say $da->gsub("I don't like nomatch at all!");
-    $da = __PACKAGE__->open(shift);
-    say $da->gsub("The quick brown fox jumps over the black lazy dog",
-		  sub{"<$_[0]>"});
+    say $da->gsub("I don't like ALGOL at all!", \%a);
+    if (@ARGV){
+	$da = __PACKAGE__->open(shift);
+	say $da->gsub("The quick brown fox jumps over the black lazy dog",
+		      sub{"<$_[0]>"});
+    }
 }
 
 1;
@@ -66,10 +70,14 @@ Text::Darts - Perl interface to DARTS by Taku Kudoh
 
 =head1 SYNOPSIS
 
-  use Text::Darts; 
-  my $td     = Text::Darts->new(qw/ALGOL ANSI ARCO ARPA ARPANET ASCII/);
+  use Text::Darts;
+  my @words = qw/ALGOL ANSI ARCO ARPA ARPANET ASCII/;
+  my %word   = map { $_ => lc $_ } @words;
+  my $td     = Text::Darts->new(@words);
   my $newstr = $td->gsub("ARPANET is a net by ARPA", sub{ "<<$_[0]>>" });
   # $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
+  my $lstr   = $td->gsub("ARPANET is a net by ARPA", \%words);
+  # $Lstr is now "<<ARPANET>> is a net by <<ARPA>>".
   # or
   my $td     = Text::Darts->open("words.darts");
   my $newstr = $td->gsub($str, sub{ 
@@ -87,6 +95,12 @@ The problem with regexp is that it is slow with alterations.  Suppose
 you want to anchor all words that appear in /usr/share/dict/words with
 regexp.  It would be impractical with regexp but Darts make it
 practical.
+
+Since Version 0.05, L<Text::Darts> also accepts a hash reference instead of a code reference.  In such cases gsub behaves as follows.
+
+  $str = s{ (foo|bar|baz) }{$replacement{$1}}msgx;
+
+like C<s///ge> vs C<s///g>, this is less flexible but faster.
 
 =head1 REQUIREMENT
 
