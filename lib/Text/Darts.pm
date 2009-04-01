@@ -10,7 +10,7 @@ XSLoader::load('Text::Darts', $VERSION);
 
 sub new{
     my $pkg = shift;
-    my $dpi = xs_make([sort @_]);
+    my $dpi = xs_make([ grep { $_ } sort @_]);
     bless \$dpi, $pkg;
 }
 

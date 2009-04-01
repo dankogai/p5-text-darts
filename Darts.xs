@@ -69,8 +69,9 @@ static SV *do_hvlookup(SV *hashref, char *str, size_t len){
     return val && *val ? *val : &PL_sv_undef;
 }
 
+
 static SV *da_gsub(int dpi, SV *src, SV *rep){
-    SV *result = newSV(0);
+    SV *result = newSV(SvCUR(src) * 2);
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair[MAX_NMATCH];
 
@@ -78,10 +79,19 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
     char *tail = head + SvCUR(src);
 
     while (head < tail) {
-	size_t size = 
-	    dp->commonPrefixSearch(head,result_pair, sizeof(result_pair));
-	size_t seekto = 0;       
+	char *ohead = head;
+	size_t size, slen;
+	while(head < tail){
+	    size = 
+		dp->commonPrefixSearch(head,result_pair, sizeof(result_pair));
+	    if (size) break;
+	    head++;
+	}
+	if (head != ohead){
+	    sv_catpvn(result, ohead, (head - ohead));
+	}
 	if (size) {
+	    size_t seekto = 0;       
 	    for (size_t i = 0; i < size; ++i) {
 		if (seekto < result_pair[i].length)
 		    seekto = result_pair[i].length;
@@ -93,10 +103,6 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
 		sv_catsv(result, ret);
 		head += seekto;
 	    }
-	}
-	if (seekto == 0) {
-	    sv_catpvn(result, head, 1);
-	    ++head; 
 	}
     }
     return result;

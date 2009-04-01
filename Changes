@@ -4,6 +4,10 @@
 #
 $Revision: 0.6 $ $Date: 2009/03/30 12:57:33 $
 ! Darts.xs lib/Text/Darts.pm
+  More optimization
+
+0.06 2009/03/30 12:57:33
+! Darts.xs lib/Text/Darts.pm
   Optimized gsub($str, \%hashref);
 
 0.05  2009/03/30 11:44:30
