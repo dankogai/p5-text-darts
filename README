@@ -2,10 +2,19 @@ NAME
     Text::Darts - Perl interface to DARTS by Taku Kudoh
 
 SYNOPSIS
-      use Text::Darts; 
-      my $td     = Text::Darts->new(qw/ALGOL ANSI ARCO ARPA ARPANET ASCII/);
+      use Text::Darts;
+      my @words = qw/ALGOL ANSI ARCO ARPA ARPANET ASCII/;
+      my %word   = map { $_ => lc $_ } @words;
+      my $td     = Text::Darts->new(@words);
       my $newstr = $td->gsub("ARPANET is a net by ARPA", sub{ "<<$_[0]>>" });
-      $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
+      # $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
+      my $lstr   = $td->gsub("ARPANET is a net by ARPA", \%words);
+      # $Lstr is now "arpanet is a net by arpa".
+      # or
+      my $td     = Text::Darts->open("words.darts");
+      my $newstr = $td->gsub($str, sub{ 
+         qq(<a href="http://dictionary.com/browse/$_[0]">$_[0]</a>)
+      }); # link'em all!
 
 DESCRIPTION
     Darts, or Double-ARray Trie System is a C++ Template Library by Taku
@@ -18,18 +27,25 @@ DESCRIPTION
     want to anchor all words that appear in /usr/share/dict/words with
     regexp. It would be impractical with regexp but Darts make it practical.
 
+    Since Version 0.05, Text::Darts also accepts a hash reference instead of
+    a code reference. In such cases gsub behaves as follows.
+
+      $str = s{ (foo|bar|baz) }{$replacement{$1}}msgx;
+
+    like "s///ge" vs "s///g", this is less flexible but faster.
+
 REQUIREMENT
-    Darts 0.31 or above. Available at
+    Darts 0.32 or above. Available at
 
     <http://chasen.org/~taku/software/darts/index.html> (Japanese)
 
-    <http://chasen.org/~taku/software/darts/src/darts-0.31.tar.gz>
+    <http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz>
 
     To install, just
 
-      fetch http://chasen.org/~taku/software/darts/src/darts-0.31.tar.gz
-      tar zxvf darts-0.31.tar.gz
-      cd darts-0.31
+      fetch http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz
+      tar zxvf darts-0.32.tar.gz
+      cd darts-0.32
       configure
       make
       make check
@@ -47,7 +63,7 @@ AUTHOR
     Dan Kogai, <dankogai@dan.co.jp>
 
 COPYRIGHT AND LICENSE
-    Copyright (C) 2007 by Dan Kogai
+    Copyright (C) 2007-2009 by Dan Kogai
 
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself, either Perl version 5.10.0 or, at
