@@ -71,7 +71,7 @@ static SV *do_hvlookup(SV *hashref, char *str, size_t len){
 
 
 static SV *da_gsub(int dpi, SV *src, SV *rep){
-    SV *result = newSV(SvCUR(src) * 2);
+    SV *result = newSV(SvCUR(src));
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair[MAX_NMATCH];
 
@@ -80,7 +80,7 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
 
     while (head < tail) {
 	char *ohead = head;
-	size_t size, slen;
+	size_t size, rlen = 0;
 	while(head < tail){
 	    size = 
 		dp->commonPrefixSearch(head,result_pair, sizeof(result_pair));
@@ -88,7 +88,10 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
 	    head++;
 	}
 	if (head != ohead){
-	    sv_catpvn(result, ohead, (head - ohead));
+	    size_t d = (head - ohead);
+	    rlen += d;
+	    if (rlen > SvCUR(result)) SvGROW(result, SvCUR(result)*2);
+	    sv_catpvn(result, ohead, d);
 	}
 	if (size) {
 	    size_t seekto = 0;       
@@ -100,7 +103,9 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
 		SV *ret = SvTYPE(SvRV(rep)) == SVt_PVCV
 		    ? do_callback(rep, newSVpvn(head, seekto))
 		    : do_hvlookup(rep, head, seekto);
-		sv_catsv(result, ret);
+		rlen += SvCUR(ret);
+		if (rlen > SvCUR(result)) SvGROW(result, SvCUR(result)*2);
+		sv_catpvn(result, SvPVX(ret), SvCUR(ret));
 		head += seekto;
 	    }
 	}
@@ -150,5 +155,12 @@ xs_search(dpi, str)
     char *str;
 CODE:
     RETVAL = da_search(dpi, str);
+OUTPUT:
+    RETVAL
+
+char *
+DARTS_VERSION()
+CODE:
+    RETVAL = DARTS_VERSION;
 OUTPUT:
     RETVAL

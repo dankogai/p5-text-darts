@@ -2,7 +2,7 @@ package Text::Darts;
 use strict;
 use warnings;
 use Carp;
-our $VERSION = sprintf "%d.%02d", q$Revision: 0.6 $ =~ /(\d+)/g;
+our $VERSION = sprintf "%d.%02d", q$Revision: 0.8 $ =~ /(\d+)/g;
 our $DEBUG = 0;
 
 require XSLoader;
@@ -44,7 +44,6 @@ sub gsub{
     xs_gsub(${$_[0]}, $_[1], $cb);
 }
 
-
 if ($0 eq __FILE__){
     sub say { print @_, "\n" };
     my @a = ("ALGOL", "ANSI", "ARCO",  "ARPA", "ARPANET", "ASCII");
@@ -78,8 +77,9 @@ Text::Darts - Perl interface to DARTS by Taku Kudoh
   # $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
   my $lstr   = $td->gsub("ARPANET is a net by ARPA", \%words);
   # $Lstr is now "arpanet is a net by arpa".
+
   # or
-  my $td     = Text::Darts->open("words.darts");
+  my $td     = Text::Darts->open("words.darts"); # make one with mkdarts
   my $newstr = $td->gsub($str, sub{ 
      qq(<a href="http://dictionary.com/browse/$_[0]">$_[0]</a>)
   }); # link'em all!
@@ -93,10 +93,16 @@ This module makes use of Darts to implement global replace like below;
 
 The problem with regexp is that it is slow with alterations.  Suppose
 you want to anchor all words that appear in /usr/share/dict/words with
-regexp.  It would be impractical with regexp but Darts make it
+regexp.  It would be impractical with regexp.  This module makes it
 practical.
 
-Since Version 0.05, L<Text::Darts> also accepts a hash reference instead of a code reference.  In such cases gsub behaves as follows.
+Even if you are using perl 5.10 or better which does TRIE optimization
+internally, you still have to compile the regexp everytime you run the
+script.  So it is still more practical to use this module if your
+match is exact -- containing no quantifier.
+
+Since Version 0.05, L<Text::Darts> also accepts a hash reference
+instead of a code reference.  In such cases gsub behaves as follows.
 
   $str = s{ (foo|bar|baz) }{$replacement{$1}}msgx;
 
@@ -104,13 +110,12 @@ like C<s///ge> vs C<s///g>, this is less flexible but faster.
 
 =head1 REQUIREMENT
 
-Darts 0.32 or above.  Available at 
+Since Version 0.07, you no longer need to have Darts installed.  This
+module now bundles darts.h which is needed to build this module.  To
+get the most out of Darts, you still need to install Darts 0.32 or
+above.
 
 L<http://chasen.org/~taku/software/darts/index.html> (Japanese)
-
-L<http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz>
-
-To install, just
 
   fetch http://chasen.org/~taku/software/darts/src/darts-0.32.tar.gz
   tar zxvf darts-0.32.tar.gz
@@ -120,9 +125,21 @@ To install, just
   make check
   sudo make install
 
+
+
 =head2 EXPORT
 
 None.
+
+=head2 Functions
+
+=over 2
+
+=item Text::Darts::DARTS_VERSION
+
+returns DARTS version.  Currently 0.32
+
+=back
 
 =head1 SEE ALSO
 
@@ -136,10 +153,51 @@ Dan Kogai, E<lt>dankogai@dan.co.jpE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
+=over 2
+
+=item darts.h
+
+Copyright (c) 2001-2008, Taku Kudo
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+ * Redistributions of source code must retain the above
+   copyright notice, this list of conditions and the
+   following disclaimer.
+
+ * Redistributions in binary form must reproduce the above
+   copyright notice, this list of conditions and the
+   following disclaimer in the documentation and/or other
+   materials provided with the distribution.
+
+ * Neither the name of the Nippon Telegraph and Telegraph Corporation
+   nor the names of its contributors may be used to endorse or
+   promote products derived from this software without specific
+   prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABI LITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONT RIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ( INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR P ROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT , STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF TH IS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+=item anything else
+
 Copyright (C) 2007-2009 by Dan Kogai
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.10.0 or,
 at your option, any later version of Perl 5 you may have available.
+
+=back
 
 =cut
