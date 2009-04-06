@@ -3,6 +3,9 @@
 # $Id: Changes,v 0.6 2009/03/30 12:57:33 dankogai Exp dankogai $
 #
 $Revision: 0.6 $ $Date: 2009/03/30 12:57:33 $
++ darts.h
+  Text::Darts now includes darts.h.
+  You no longer need to install darts a priori.
 ! Darts.xs lib/Text/Darts.pm
   More optimization
 

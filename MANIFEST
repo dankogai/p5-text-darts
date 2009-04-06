@@ -3,6 +3,7 @@ Darts.xs
 MANIFEST
 Makefile.PL
 README
+darts.h
 lib/Text/Darts.pm
 t/Text-Darts.t
 t/benchmark.pl

@@ -8,7 +8,7 @@ extern "C" {
 }
 #endif
 
-#include <darts.h>
+#include "darts.h"
 #define MAX_NMATCH 1024
 
 static int da_make(AV *av){
