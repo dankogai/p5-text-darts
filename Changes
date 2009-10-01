@@ -3,6 +3,10 @@
 # $Id: Changes,v 0.8 2009/04/06 10:29:38 dankogai Exp dankogai $
 #
 $Revision: 0.8 $ $Date: 2009/04/06 10:29:38 $
+! Makefile.PL
+  $(LD) commented out -- more compatible
+
+0.08  2009/04/06 10:29:38
 ! README Darts.pm
   More Documents
 
