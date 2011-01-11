@@ -11,7 +11,7 @@ extern "C" {
 #include "darts.h"
 #define MAX_NMATCH 1024
 
-static int da_make(AV *av){
+static IV da_make(AV *av){
     Darts::DoubleArray *dp = new Darts::DoubleArray;
     std::vector <const Darts::DoubleArray::key_type *> keys;
     int i, l;
@@ -22,11 +22,11 @@ static int da_make(AV *av){
     return PTR2IV(dp);
 }
 
-static int da_free(int dpi){
+static int da_free(IV dpi){
     delete INT2PTR(Darts::DoubleArray *, dpi);
 }
 
-static int da_open(char *filename){
+static IV da_open(char *filename){
     Darts::DoubleArray *dp = new Darts::DoubleArray;
     if (dp->open(filename) == -1){
 	delete dp;
@@ -35,7 +35,7 @@ static int da_open(char *filename){
     return PTR2IV(dp);
 }
 
-static int da_search(int dpi, char *str){
+static size_t da_search(IV dpi, char *str){
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair [MAX_NMATCH];
     size_t num = dp->commonPrefixSearch(str, result_pair, sizeof(result_pair));
@@ -70,7 +70,7 @@ static SV *do_hvlookup(SV *hashref, char *str, size_t len){
 }
 
 
-static SV *da_gsub(int dpi, SV *src, SV *rep){
+static SV *da_gsub(IV dpi, SV *src, SV *rep){
     SV *result = newSV(SvCUR(src));
     Darts::DoubleArray *dp = INT2PTR(Darts::DoubleArray *, dpi);
     Darts::DoubleArray::result_pair_type  result_pair[MAX_NMATCH];
@@ -115,7 +115,7 @@ static SV *da_gsub(int dpi, SV *src, SV *rep){
 
 MODULE = Text::Darts		PACKAGE = Text::Darts		
 
-int
+IV
 xs_make(av)
    AV *av
 CODE:
@@ -125,13 +125,13 @@ OUTPUT:
 
 int
 xs_free(dpi)
-    int  dpi;
+    IV  dpi;
 CODE:
     RETVAL = da_free(dpi);
 OUTPUT:
     RETVAL
 
-int
+IV
 xs_open(filename)
    char *filename
 CODE:
@@ -141,7 +141,7 @@ OUTPUT:
 
 SV *
 xs_gsub(dpi, src, rep)
-   int dpi;
+   IV dpi;
    SV *src;
    SV *rep; 
 CODE:
@@ -149,9 +149,9 @@ CODE:
 OUTPUT:
    RETVAL
 
-int
+size_t
 xs_search(dpi, str)
-    int  dpi;
+    IV  dpi;
     char *str;
 CODE:
     RETVAL = da_search(dpi, str);
