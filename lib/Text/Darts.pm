@@ -75,7 +75,7 @@ Text::Darts - Perl interface to DARTS by Taku Kudoh
   my $td     = Text::Darts->new(@words);
   my $newstr = $td->gsub("ARPANET is a net by ARPA", sub{ "<<$_[0]>>" });
   # $newstr is now "<<ARPANET>> is a net by <<ARPA>>".
-  my $lstr   = $td->gsub("ARPANET is a net by ARPA", \%words);
+  my $lstr   = $td->gsub("ARPANET is a net by ARPA", \%word);
   # $Lstr is now "arpanet is a net by arpa".
 
   # or
